@@ -57,9 +57,19 @@ export interface Profile {
 
 const newTopic = (): TopicState => ({ mastery: 0, attempts: 0, right: 0, run: 0, diff: 1, last: 0, due: 0, reviews: 0, watched: false, read: false })
 
+export interface SmartState {
+  score: number // current SmartScore 0..100
+  best: number
+  answered: number
+  right: number
+  seconds: number // total time spent in mastery mode
+  perfectAt?: number // when 100 was first reached
+}
+
 interface State {
   profile: Profile
   topics: Record<string, TopicState>
+  smart: Record<string, SmartState>
   days: Record<string, DayLog>
   exams: ExamResult[]
   warmupBest: number
@@ -72,6 +82,7 @@ interface State {
   addXp: (n: number) => void
   answer: (topic: string, ok: boolean, diff: Level) => void
   finishPractice: (topic: string) => void
+  smartAnswer: (topic: string, score: number, ok: boolean, seconds: number) => void
   markWatched: (topic: string) => void
   markRead: (topic: string) => void
   completeTask: (id: string) => void
@@ -87,6 +98,7 @@ interface State {
 const initial = {
   profile: { name: '', level: 9 as const, placed: false, dailyGoal: 60, rate: 1, sound: true },
   topics: {},
+  smart: {},
   days: {},
   exams: [],
   warmupBest: 0,
@@ -144,6 +156,21 @@ export const useStore = create<State>()(
         })
         checkBadges()
       },
+      smartAnswer: (topic, score, ok, seconds) => {
+        set((s) => {
+          const cur = s.smart[topic] ?? { score: 0, best: 0, answered: 0, right: 0, seconds: 0 }
+          const next: SmartState = {
+            score,
+            best: Math.max(cur.best, score),
+            answered: cur.answered + 1,
+            right: cur.right + (ok ? 1 : 0),
+            seconds: cur.seconds + seconds,
+            perfectAt: cur.perfectAt ?? (score >= 100 ? Date.now() : undefined),
+          }
+          return { smart: { ...s.smart, [topic]: next } }
+        })
+        checkBadges()
+      },
       markWatched: (topic) => {
         set((s) => ({ topics: { ...s.topics, [topic]: { ...(s.topics[topic] ?? newTopic()), watched: true } } }))
         checkBadges()
@@ -163,7 +190,7 @@ export const useStore = create<State>()(
           const data = JSON.parse(json)
           const st = data.state ?? data
           if (!st.profile || !st.topics) return false
-          set({ ...initial, ...st })
+          set({ ...initial, ...st, smart: st.smart ?? {} })
           return true
         } catch {
           return false
@@ -171,7 +198,12 @@ export const useStore = create<State>()(
       },
       resetAll: () => set({ ...initial }),
     }),
-    { name: 'eureka-maths-v1', version: 1 },
+    {
+      name: 'eureka-maths-v1',
+      version: 1,
+      // older saves (before mastery mode) have no `smart` field
+      merge: (persisted, current) => ({ ...current, ...(persisted as object), smart: (persisted as { smart?: Record<string, SmartState> })?.smart ?? {} }),
+    },
   ),
 )
 
@@ -213,6 +245,10 @@ export const BADGES: { id: string; emoji: string; title: string; desc: string }[
   { id: 'exam1', emoji: '📝', title: 'Test ready', desc: 'Complete a practice test' },
   { id: 'exam90', emoji: '🎯', title: 'Sharp shooter', desc: 'Score 90%+ on a test' },
   { id: 'xp1000', emoji: '💎', title: '1000 XP', desc: 'Earn 1000 XP' },
+  { id: 'challenge', emoji: '🔥', title: 'Challenge accepted', desc: 'Reach the Challenge Zone (SmartScore 90)' },
+  { id: 'perfect1', emoji: '💯', title: 'Perfect!', desc: 'Reach a SmartScore of 100' },
+  { id: 'perfect5', emoji: '🥇', title: 'Perfectionist', desc: 'SmartScore 100 in 5 topics' },
+  { id: 'q500', emoji: '🏋️', title: 'Hard worker', desc: 'Answer 500 mastery questions' },
 ]
 
 function checkBadges() {
@@ -235,6 +271,10 @@ function checkBadges() {
     exam1: s.exams.length > 0,
     exam90: s.exams.some((e) => e.total >= 10 && e.score / e.total >= 0.9),
     xp1000: s.xp >= 1000,
+    challenge: Object.values(s.smart).some((x) => x.best >= 90),
+    perfect1: Object.values(s.smart).some((x) => x.best >= 100),
+    perfect5: Object.values(s.smart).filter((x) => x.best >= 100).length >= 5,
+    q500: Object.values(s.smart).reduce((a, x) => a + x.answered, 0) >= 500,
   }
   const add: Record<string, number> = {}
   let last: string | undefined

@@ -4,6 +4,21 @@ import { TOPICS } from '../src/data/topics'
 import { SCENES } from '../src/scenes'
 import { warmupQuestion } from '../src/gens/warmup'
 import type { Problem, Level } from '../src/lib/problem'
+import { diagnose, updateSmart } from '../src/lib/smart'
+
+// SmartScore sanity: perfect requires sustained accuracy
+{
+  let s = 0
+  let n = 0
+  while (s < 100 && n < 200) {
+    s = updateSmart(s, true)
+    n++
+  }
+  console.log(`SmartScore: ${n} correct answers in a row reach 100`)
+  let t = 0
+  for (let i = 0; i < 400; i++) t = updateSmart(t, i % 5 !== 0) // 80% accuracy
+  console.log(`SmartScore at steady 80% accuracy settles at ${t}`)
+}
 
 let problems = 0
 const seen = new Set<string>()
@@ -43,6 +58,15 @@ function checkProblem(p: Problem, where: string) {
     p.options?.forEach((o) => mathOk(o, where + ' option'))
   }
   if (p.kind === 'multi') p.fields!.forEach((f) => !Number.isFinite(f.ans) && bad(`${where}: non-finite field ${f.label}`))
+  // mistake diagnosis must never crash and must render
+  const topic = where.split('#')[0]
+  const wrongs: string[][] =
+    p.kind === 'num' ? [[String(-p.ans!)], [String(p.ans! * p.ans!)], [String(p.ans! * 10)], [String(p.ans! + 0.1)], ['abc'], [String(p.ans! + 7)]] : p.kind === 'multi' ? [p.fields!.map((f) => String(-f.ans)), p.fields!.map((f, i) => (i ? '999' : String(f.ans))), p.fields!.map(() => '')] : [[]]
+  for (const w of wrongs) {
+    const msg = diagnose(p, w, topic)
+    if (msg) mathOk(msg, where + ' diagnose')
+  }
+  if (p.kind === 'num' && p.ans !== 0 && !diagnose(p, [String(-p.ans!)], topic)) bad(`${where}: sign slip not diagnosed`)
 }
 
 let count = 0

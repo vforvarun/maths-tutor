@@ -31,15 +31,15 @@ interface Props {
   doneLabel?: string
 }
 
-const coarse = typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches
+export const coarse = typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches
 
-function answerText(p: Problem) {
+export function answerText(p: Problem) {
   if (p.kind === 'mcq') return p.options![0]
   if (p.kind === 'num') return `$${fmt(p.ans!, 4).replace('−', '-')}$${p.unit ? ' ' + p.unit : ''}`
   return p.fields!.map((f) => `${f.label} = $${fmt(f.ans, 4).replace('−', '-')}$`).join(', ')
 }
 
-function check(p: Problem, vals: string[], choice: number | null): boolean {
+export function check(p: Problem, vals: string[], choice: number | null): boolean {
   const tol = p.tol ?? 0.011
   if (p.kind === 'mcq') return choice === 0
   if (p.kind === 'num') {
@@ -58,7 +58,7 @@ function check(p: Problem, vals: string[], choice: number | null): boolean {
   })
 }
 
-const KEYS = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '−', '0', '.']
+export const KEYS = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '−', '0', '.']
 
 export function ProblemRunner({ count, make, mode = 'practice', title, timeLimit, onFinish, onExit, doneLabel = 'Done' }: Props) {
   const [i, setI] = useState(0)

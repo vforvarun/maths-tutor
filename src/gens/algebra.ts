@@ -72,7 +72,7 @@ export const linEqBothSides: Gen = (d) => {
   if (d === 3) c = -ri(1, 5)
   const b = nz(-12, 12)
   const dd = (a - c) * x + b
-  return num(`Solve ${$(`${poly([a, 'x'], [b, ''])} = ${poly([c, 'x'], [dd, ''])}`)}`, x, [`Get the $x$’s on one side: subtract $${lead(c)}$ from both sides: $${poly([a - c, 'x'], [b, ''])} = ${dd}$`, `${b < 0 ? `Add ${-b}` : `Subtract ${b}`}: $${lead(a - c)} = ${dd - b}$`, `Divide by ${a - c}: $x = ${x}$`], { hint: 'Collect the x terms on the side with more x’s.' })
+  return num(`Solve ${$(`${poly([a, 'x'], [b, ''])} = ${poly([c, 'x'], [dd, ''])}`)}`, x, [`Get the $x$’s on one side: ${c < 0 ? `add $${lead(-c)}$ to` : `subtract $${lead(c)}$ from`} both sides: $${poly([a - c, 'x'], [b, ''])} = ${dd}$`, `${b < 0 ? `Add ${-b}` : `Subtract ${b}`}: $${lead(a - c)} = ${dd - b}$`, `Divide by ${a - c}: $x = ${x}$`], { hint: 'Collect the x terms on the side with more x’s.' })
 }
 
 export const linEqBrackets: Gen = (d) => {

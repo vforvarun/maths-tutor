@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { motion } from 'motion/react'
-import { Dumbbell, Lightbulb, AlertTriangle, Printer, ListOrdered, Check, Sigma } from 'lucide-react'
+import { Dumbbell, Lightbulb, AlertTriangle, Printer, ListOrdered, Check, Sigma, Trophy } from 'lucide-react'
 import { TOPICS, STRANDS, topicById, type Strand } from '../data/topics'
 import { SCENES } from '../scenes'
 import { useStore, topicState, masteryLabel, masteryColor } from '../lib/store'
@@ -249,9 +249,14 @@ export function TopicPage() {
               </div>
             </Ring>
             <div className="mt-2 text-sm font-medium text-ink-soft">Level {ts.diff} of 3 · {ts.right}/{ts.attempts} correct</div>
-            <Link to={`/practice/${t.id}`} className="mt-4 block">
+            <Link to={`/master/${t.id}`} className="mt-4 block">
               <Button className="w-full">
-                <Dumbbell size={18} /> Practise
+                <Trophy size={18} /> Master it · {s.smart[t.id]?.score ?? 0}/100
+              </Button>
+            </Link>
+            <Link to={`/practice/${t.id}`} className="mt-3 block">
+              <Button variant="secondary" className="w-full">
+                <Dumbbell size={18} /> Quick practice (8)
               </Button>
             </Link>
             <Button variant="secondary" className="mt-3 w-full" onClick={() => window.print()}>

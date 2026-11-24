@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
-import { Home, BookOpen, ClipboardCheck, BarChart3, Settings, LayoutGrid, Flame, Sigma, Zap } from 'lucide-react'
+import { Home, BookOpen, ClipboardCheck, BarChart3, Settings, LayoutGrid, Flame, Sigma, Zap, Trophy } from 'lucide-react'
 import { useStore, streak, BADGES, levelFromXp } from '../lib/store'
 import { configureVoice } from '../lib/speech'
 import { celebrate } from '../lib/fx'
@@ -9,6 +9,7 @@ import { celebrate } from '../lib/fx'
 const NAV = [
   { to: '/', label: 'Today', sub: 'Your daily plan', icon: Home, end: true },
   { to: '/topics', label: 'Learn', sub: 'Lessons & animations', icon: BookOpen },
+  { to: '/master', label: 'Master it', sub: 'Practise until perfect', icon: Trophy },
   { to: '/warmup', label: 'Warm-up', sub: 'Mental maths', icon: Zap },
   { to: '/tests', label: 'Tests', sub: 'Exam practice', icon: ClipboardCheck },
   { to: '/formulas', label: 'Formula sheet', sub: 'Every formula', icon: Sigma },
@@ -18,8 +19,8 @@ const NAV = [
 const MOBILE = [
   { to: '/', label: 'Today', icon: Home, end: true },
   { to: '/topics', label: 'Learn', icon: BookOpen },
+  { to: '/master', label: 'Master', icon: Trophy },
   { to: '/tests', label: 'Tests', icon: ClipboardCheck },
-  { to: '/progress', label: 'Progress', icon: BarChart3 },
   { to: '/more', label: 'More', icon: LayoutGrid },
 ]
 
@@ -65,7 +66,7 @@ export function Layout() {
   const badge = BADGES.find((b) => b.id === lastBadge)
   const st = streak(days)
   const lvl = levelFromXp(xp)
-  const focusMode = /^\/(practice|test|welcome)(\/|$)/.test(loc.pathname) || loc.pathname === '/warmup/go'
+  const focusMode = /^\/(practice|test|welcome)(\/|$)|^\/master\/./.test(loc.pathname) || loc.pathname === '/warmup/go'
 
   return (
     <div className="min-h-dvh lg:flex">

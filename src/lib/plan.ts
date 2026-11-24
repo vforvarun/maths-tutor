@@ -42,7 +42,7 @@ export function dailyPlan(): PlanTask[] {
 
   const inProgress = order.filter((t) => topicState(s, t.id).attempts > 0 && topicState(s, t.id).mastery < 80).sort((a, b) => topicState(s, a.id).mastery - topicState(s, b.id).mastery)[0]
   const pr = inProgress ?? learn ?? order[0]
-  if (pr) tasks.push({ id: 'practise', title: `Practise: ${pr.title}`, subtitle: inProgress ? `Mastery ${Math.round(topicState(s, pr.id).mastery)}% — let’s push it up` : 'Try some questions', emoji: pr.emoji, to: `/practice/${pr.id}`, minutes: 6, hue: pr.strand })
+  if (pr) tasks.push({ id: 'practise', title: `Master: ${pr.title}`, subtitle: `SmartScore ${s.smart[pr.id]?.score ?? 0}/100 — practise until perfect`, emoji: pr.emoji, to: `/master/${pr.id}`, minutes: 8, hue: pr.strand })
 
   tasks.push({ id: 'challenge', title: 'Mixed challenge', subtitle: '8 questions from your topics', emoji: '🎯', to: '/test/quick', minutes: 5, hue: 'algebra' })
   return tasks

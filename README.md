@@ -6,6 +6,7 @@ A study app for Victorian Curriculum Mathematics, Levels 9–10. Runs in the bro
 - **25 topics** across Number, Algebra, Measurement, Space, Statistics and Probability (Year 9 and Year 10).
 - **Animated, narrated lessons** for every topic — play/pause/step, captions and voice-over, built around real-life analogies (balance scales, skate ramps, sharing lollies, snowballs…).
 - **Plain-English lessons**, step-by-step worked examples, common mistakes and key formulas for each topic.
+- **Master it (IXL/Kumon-style)**: unlimited practice per topic with a SmartScore to 100, a Challenge Zone at 90+, mistake diagnosis, step-by-step solutions, “try a similar one”, help panels when stuck, and skill-targeted questions.
 - **Endless practice**: 55 question generators with full worked solutions, hints and adaptive difficulty (3 levels), plus an on-screen keypad for the iPad.
 - **Mastery tracking & spaced review**: each topic has a mastery score; mastered topics come back for review after 2, 5, 10, 21, 45 days.
 - **Daily plan**, mental-maths warm-up, quick challenge, topic tests, timed mock exam, printable formula sheet, term planner.

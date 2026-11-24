@@ -189,6 +189,7 @@ export function SettingsPage() {
 
 export function MorePage() {
   const items = [
+    { to: '/progress', emoji: '📈', title: 'Progress', hue: 'measurement' },
     { to: '/warmup', emoji: '⚡', title: 'Warm-up', hue: 'warm' },
     { to: '/formulas', emoji: '∑', title: 'Formula sheet', hue: 'algebra' },
     { to: '/planner', emoji: '🗓️', title: 'Term planner', hue: 'statistics' },
