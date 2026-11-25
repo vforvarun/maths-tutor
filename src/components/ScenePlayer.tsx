@@ -1,10 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Play, Pause, SkipBack, SkipForward, RotateCcw, Volume2, VolumeX, Maximize2, Minimize2 } from 'lucide-react'
-import { speak, stopSpeaking } from '../lib/speech'
+import { narrate, stopSpeaking, unlockAudio } from '../lib/speech'
+import narration from '../data/narration.json'
 import type { SceneDef } from '../scenes'
 import { W, H } from '../scenes/kit'
 import { MathText } from './MathText'
+
+const clips = narration.files as Record<string, string[]>
+const clipUrl = (scene: string, step: number) => {
+  const f = clips[scene]?.[step]
+  return f ? `${import.meta.env.BASE_URL}narration/${f}` : undefined
+}
 
 /** Plays an animated, narrated explainer — like a video, but live. */
 export function ScenePlayer({ scene, onComplete, autoStart = false }: { scene: SceneDef; onComplete?: () => void; autoStart?: boolean }) {
@@ -25,7 +32,12 @@ export function ScenePlayer({ scene, onComplete, autoStart = false }: { scene: S
     let cancelled = false
     ;(async () => {
       const text = scene.steps[step]
-      if (!muted) await speak(text)
+      if (!muted) {
+        // warm up the next clip so there's no gap between steps
+        const next = clipUrl(scene.id, step + 1)
+        if (next) fetch(next).catch(() => {})
+        await narrate(text, clipUrl(scene.id, step))
+      }
       else await new Promise((r) => setTimeout(r, Math.max(2500, text.length * 55)))
       await new Promise((r) => setTimeout(r, 700))
       if (cancelled || my !== token.current) return
@@ -58,6 +70,7 @@ export function ScenePlayer({ scene, onComplete, autoStart = false }: { scene: S
         setStep(0)
         setEnded(false)
       }
+      unlockAudio()
       setPlaying(true)
     }
   }

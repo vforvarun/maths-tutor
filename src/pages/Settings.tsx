@@ -81,7 +81,17 @@ export function SettingsPage() {
         </Card>
 
         <Card className="px-5">
-          <Row title="Narrator voice" sub="Used in the animated lessons">
+          <Row title="Lesson narration" sub="Natural = pre-recorded voice (needs internet the first time)">
+            <Seg
+              value={p.narration ?? 'recorded'}
+              options={[['recorded', 'Natural'], ['device', 'Device voice']]}
+              onChange={(v) => {
+                s.setProfile({ narration: v })
+                configureVoice(p.voiceURI, p.rate, v === 'recorded')
+              }}
+            />
+          </Row>
+          <Row title="Device voice" sub={p.narration === 'device' ? 'Used in the animated lessons' : 'Backup voice if a recording can’t load'}>
             <select
               value={p.voiceURI ?? voices[0]?.voiceURI ?? ''}
               onChange={(e) => {

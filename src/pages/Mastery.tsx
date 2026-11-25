@@ -7,6 +7,7 @@ import { SCENES } from '../scenes'
 import { useStore } from '../lib/store'
 import { updateSmart, difficultyFor, zoneFor, diagnose, PERFECT } from '../lib/smart'
 import { shuffle } from '../lib/num'
+import { unlockAudio } from '../lib/speech'
 import type { Gen, Problem, Level } from '../lib/problem'
 import { sfx, celebrate } from '../lib/fx'
 import { Page, PageHeader, Card, Button, Ring } from '../components/ui'
@@ -581,7 +582,7 @@ export function MasterySession() {
             )}
           </AnimatePresence>
 
-          {missRun >= 2 && <HelpPanel t={t} onWatch={() => setWatch(true)} />}
+          {missRun >= 2 && <HelpPanel t={t} onWatch={() => (unlockAudio(), setWatch(true))} />}
         </div>
 
         {/* sidebar */}

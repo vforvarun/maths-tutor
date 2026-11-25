@@ -35,7 +35,7 @@ export function Layout() {
   const lastActive = useRef(Date.now())
 
   useEffect(() => {
-    configureVoice(profile.voiceURI, profile.rate)
+    configureVoice(profile.voiceURI, profile.rate, profile.narration !== 'device')
   }, [profile.voiceURI, profile.rate])
 
   useEffect(() => {

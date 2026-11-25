@@ -1,0 +1,195 @@
+{
+ "voice": "bf_emma",
+ "files": {
+  "indices": [
+   "indices-0-8fc2679d.m4a",
+   "indices-1-96f464d5.m4a",
+   "indices-2-9d81ff01.m4a",
+   "indices-3-f3ca81c8.m4a",
+   "indices-4-8f6d7845.m4a",
+   "indices-5-cdd5f9c1.m4a"
+  ],
+  "sci-notation": [
+   "sci-notation-0-af57e914.m4a",
+   "sci-notation-1-eed8a2fa.m4a",
+   "sci-notation-2-9651ef4e.m4a",
+   "sci-notation-3-427af3bc.m4a",
+   "sci-notation-4-8b1ab7a1.m4a"
+  ],
+  "simple-interest": [
+   "simple-interest-0-f10d9d70.m4a",
+   "simple-interest-1-3558b3e3.m4a",
+   "simple-interest-2-cf68eec6.m4a",
+   "simple-interest-3-2b2c9c5a.m4a",
+   "simple-interest-4-9306b6f5.m4a"
+  ],
+  "compound-interest": [
+   "compound-interest-0-27526119.m4a",
+   "compound-interest-1-56bda629.m4a",
+   "compound-interest-2-d81d721c.m4a",
+   "compound-interest-3-fab8eb3a.m4a",
+   "compound-interest-4-8b2847ae.m4a"
+  ],
+  "expanding": [
+   "expanding-0-533ed800.m4a",
+   "expanding-1-1b5a75f7.m4a",
+   "expanding-2-ba6178ef.m4a",
+   "expanding-3-043170a4.m4a",
+   "expanding-4-4aae1d7c.m4a",
+   "expanding-5-1b12201d.m4a"
+  ],
+  "factorising": [
+   "factorising-0-d413c118.m4a",
+   "factorising-1-f6418c5e.m4a",
+   "factorising-2-3f9efc91.m4a",
+   "factorising-3-322c3f25.m4a",
+   "factorising-4-53a7138b.m4a"
+  ],
+  "equations": [
+   "equations-0-98db2ff9.m4a",
+   "equations-1-85107915.m4a",
+   "equations-2-be7e6e8e.m4a",
+   "equations-3-22114e98.m4a",
+   "equations-4-9889eaae.m4a"
+  ],
+  "linear-graphs": [
+   "linear-graphs-0-563392a8.m4a",
+   "linear-graphs-1-01c9b726.m4a",
+   "linear-graphs-2-4c342d29.m4a",
+   "linear-graphs-3-4b4d58cb.m4a",
+   "linear-graphs-4-3ad338e3.m4a",
+   "linear-graphs-5-acc528b4.m4a"
+  ],
+  "coordinate": [
+   "coordinate-0-a7fcf4f6.m4a",
+   "coordinate-1-c4437bcc.m4a",
+   "coordinate-2-d2331344.m4a",
+   "coordinate-3-7efa9927.m4a",
+   "coordinate-4-2c115077.m4a"
+  ],
+  "factorise-quad": [
+   "factorise-quad-0-4e1b0d97.m4a",
+   "factorise-quad-1-b3ae69b2.m4a",
+   "factorise-quad-2-4c9d6855.m4a",
+   "factorise-quad-3-4d01c2d2.m4a",
+   "factorise-quad-4-08d3560f.m4a"
+  ],
+  "quadratic-eq": [
+   "quadratic-eq-0-41c07eea.m4a",
+   "quadratic-eq-1-fd916b78.m4a",
+   "quadratic-eq-2-03113db8.m4a",
+   "quadratic-eq-3-7e79e5e8.m4a",
+   "quadratic-eq-4-9c4d76ed.m4a"
+  ],
+  "parabolas": [
+   "parabolas-0-c831c52d.m4a",
+   "parabolas-1-36dd7772.m4a",
+   "parabolas-2-8e0cfc03.m4a",
+   "parabolas-3-79a82daf.m4a",
+   "parabolas-4-b4d07d40.m4a",
+   "parabolas-5-2dd28f21.m4a"
+  ],
+  "simultaneous": [
+   "simultaneous-0-70d5d579.m4a",
+   "simultaneous-1-77f27f17.m4a",
+   "simultaneous-2-309b1574.m4a",
+   "simultaneous-3-6ddd90b1.m4a",
+   "simultaneous-4-7d0a0764.m4a"
+  ],
+  "inequalities": [
+   "inequalities-0-08b358ff.m4a",
+   "inequalities-1-a5795278.m4a",
+   "inequalities-2-0aaf8d09.m4a",
+   "inequalities-3-4a7e9276.m4a",
+   "inequalities-4-853a0832.m4a"
+  ],
+  "pythagoras": [
+   "pythagoras-0-073ff45a.m4a",
+   "pythagoras-1-d764f297.m4a",
+   "pythagoras-2-2d568d33.m4a",
+   "pythagoras-3-87c533e5.m4a",
+   "pythagoras-4-074d9711.m4a",
+   "pythagoras-5-854774ca.m4a"
+  ],
+  "trig": [
+   "trig-0-8dccdd40.m4a",
+   "trig-1-4fec7d93.m4a",
+   "trig-2-fbca14b9.m4a",
+   "trig-3-0309efa8.m4a",
+   "trig-4-374ce5b1.m4a"
+  ],
+  "trig-apps": [
+   "trig-apps-0-27ec65dd.m4a",
+   "trig-apps-1-56e8bea0.m4a",
+   "trig-apps-2-bcff8d8e.m4a",
+   "trig-apps-3-7d91bc0e.m4a",
+   "trig-apps-4-926cf4f9.m4a"
+  ],
+  "trig-rules": [
+   "trig-rules-0-93259d75.m4a",
+   "trig-rules-1-8e56d283.m4a",
+   "trig-rules-2-c80d5050.m4a",
+   "trig-rules-3-cacf5dc7.m4a",
+   "trig-rules-4-2a613382.m4a",
+   "trig-rules-5-1c2f0447.m4a",
+   "trig-rules-6-b389135d.m4a",
+   "trig-rules-7-439721d6.m4a"
+  ],
+  "surface-area": [
+   "surface-area-0-9f57f590.m4a",
+   "surface-area-1-9b308d58.m4a",
+   "surface-area-2-409824f8.m4a",
+   "surface-area-3-949d45f7.m4a",
+   "surface-area-4-32a64b3e.m4a"
+  ],
+  "volume": [
+   "volume-0-0ec5cfaa.m4a",
+   "volume-1-8c16916e.m4a",
+   "volume-2-25b33dab.m4a",
+   "volume-3-b8f16a37.m4a",
+   "volume-4-1762c11b.m4a"
+  ],
+  "volume-3d": [
+   "volume-3d-0-e3c84ed3.m4a",
+   "volume-3d-1-338ea9a4.m4a",
+   "volume-3d-2-0ba30818.m4a",
+   "volume-3d-3-ccac7c23.m4a",
+   "volume-3d-4-25550616.m4a"
+  ],
+  "similarity": [
+   "similarity-0-c4568d6f.m4a",
+   "similarity-1-a0207836.m4a",
+   "similarity-2-e7700775.m4a",
+   "similarity-3-35c13cc5.m4a",
+   "similarity-4-28ebcddd.m4a"
+  ],
+  "statistics": [
+   "statistics-0-e3626a51.m4a",
+   "statistics-1-b5ba2e48.m4a",
+   "statistics-2-3e16e175.m4a",
+   "statistics-3-f1560ffb.m4a",
+   "statistics-4-3a775302.m4a"
+  ],
+  "bivariate": [
+   "bivariate-0-be963e46.m4a",
+   "bivariate-1-a4c6c1f2.m4a",
+   "bivariate-2-3701abd5.m4a",
+   "bivariate-3-2ca3a78f.m4a",
+   "bivariate-4-17a1e5ec.m4a"
+  ],
+  "probability": [
+   "probability-0-beec2341.m4a",
+   "probability-1-7cc7e08b.m4a",
+   "probability-2-6e1c75cc.m4a",
+   "probability-3-9caa82e7.m4a",
+   "probability-4-59cf0f47.m4a"
+  ],
+  "conditional": [
+   "conditional-0-8891354d.m4a",
+   "conditional-1-e8c7ac14.m4a",
+   "conditional-2-031bd6f9.m4a",
+   "conditional-3-1d61fdb0.m4a",
+   "conditional-4-df9d127b.m4a"
+  ]
+ }
+}

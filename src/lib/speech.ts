@@ -30,9 +30,75 @@ export function englishVoices() {
 
 let preferred: string | undefined
 let rate = 1
-export function configureVoice(uri: string | undefined, r: number) {
+let recorded = true
+export function configureVoice(uri: string | undefined, r: number, useRecorded = recorded) {
   preferred = uri
   rate = r
+  recorded = useRecorded
+}
+
+// ---------- Pre-recorded narration (natural neural voice) ----------
+let audioEl: HTMLAudioElement | null = null
+let stopClip: (() => void) | null = null
+const audio = () => (audioEl ??= new Audio())
+
+let silent: string | null = null
+function silentWav() {
+  if (silent) return silent
+  const n = 800
+  const b = new ArrayBuffer(44 + n * 2)
+  const v = new DataView(b)
+  const w = (o: number, s: string) => [...s].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)))
+  w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt ')
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, 8000, true)
+  v.setUint32(28, 16000, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true)
+  return (silent = URL.createObjectURL(new Blob([b], { type: 'audio/wav' })))
+}
+
+/** Call from a tap/click: iPad Safari only lets audio play after a user gesture. */
+export function unlockAudio() {
+  if (!recorded || typeof Audio === 'undefined') return
+  const a = audio()
+  if (!a.paused && a.src) return
+  a.src = silentWav()
+  a.play().catch(() => {})
+}
+
+/** Plays a recorded clip. Resolves true when it finished (or was stopped), false if it couldn't play. */
+function playClip(url: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    const a = audio()
+    let timer = 0
+    const done = (ok: boolean) => {
+      if (stopClip !== stop) return
+      stopClip = null
+      clearTimeout(timer)
+      a.onended = a.onerror = a.onloadedmetadata = null
+      resolve(ok)
+    }
+    const stop = () => done(true)
+    stopClip?.()
+    stopClip = stop
+    a.onended = () => done(true)
+    a.onerror = () => done(false)
+    // safety net if 'ended' never fires
+    a.onloadedmetadata = () => {
+      clearTimeout(timer)
+      timer = window.setTimeout(() => done(true), (a.duration / a.playbackRate) * 1000 + 3000)
+    }
+    a.src = url
+    a.playbackRate = Math.max(0.6, Math.min(1.4, rate))
+    timer = window.setTimeout(() => done(false), 15000) // never started (offline / blocked)
+    a.play().catch(() => done(false))
+  })
+}
+
+/** Narrate a lesson line: the recorded clip if there is one, otherwise the device voice. */
+export async function narrate(text: string, clip?: string): Promise<void> {
+  if (clip && recorded && typeof Audio !== 'undefined') {
+    if (await playClip(clip)) return
+  }
+  return speak(text)
 }
 
 /** Turn maths notation into something a voice can read. */
@@ -89,4 +155,6 @@ export function speak(text: string, opts: { rate?: number } = {}): Promise<void>
 
 export function stopSpeaking() {
   if (ttsSupported) window.speechSynthesis.cancel()
+  if (audioEl) audioEl.pause()
+  stopClip?.()
 }

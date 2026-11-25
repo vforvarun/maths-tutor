@@ -50,6 +50,8 @@ export interface Profile {
   placed: boolean
   dailyGoal: number
   voiceURI?: string
+  /** lesson narration: pre-recorded natural voice (default) or the device's own voice */
+  narration?: 'recorded' | 'device'
   rate: number
   pin?: string
   sound: boolean
