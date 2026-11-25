@@ -232,6 +232,151 @@ export const trigApps: SceneDef = {
   Comp: TrigApps,
 }
 
+// ---------- Trigonometry in any triangle ----------
+function TrigRules({ step }: { step: number }) {
+  const A: Pt = [100, 290]
+  const B: Pt = [400, 290]
+  const Cv: Pt = [290, 92]
+  const tri = step <= 3
+  // laptop hinge
+  const hinge: Pt = [190, 270]
+  const tip = (deg: number): Pt => [hinge[0] + 150 * Math.cos((deg * Math.PI) / 180), hinge[1] - 150 * Math.sin((deg * Math.PI) / 180)]
+  const key: Pt = [390, 270]
+  const opens = [
+    { d: 50, col: C.mint, gap: 155 },
+    { d: 90, col: C.sky, gap: 250 },
+    { d: 130, col: C.coral, gap: 318 },
+  ]
+  // area triangle
+  const P: Pt = [120, 290]
+  const Q: Pt = [420, 290]
+  const R: Pt = [250, 110]
+  return (
+    <g>
+      {/* ---- steps 0–3: one triangle, labelled ---- */}
+      <Show when={tri}>
+        <Poly points={[A, B, Cv]} fill={C.violetSoft} stroke={C.violet} width={4} />
+        <T x={250} y={40} size={20} color={C.soft} show={step === 0}>No right angle anywhere 🤔</T>
+      </Show>
+      <Show when={tri && step >= 1}>
+        <T x={78} y={302} size={24} color={C.coral} weight={800}>A</T>
+        <T x={422} y={302} size={24} color={C.sky} weight={800}>B</T>
+        <T x={290} y={68} size={24} color={C.mint} weight={800}>C</T>
+        <Line x1={B[0]} y1={B[1]} x2={Cv[0]} y2={Cv[1]} color={C.coral} width={7} />
+        <T x={368} y={180} size={24} color={C.coral} weight={800} anchor="start">a</T>
+        <Line x1={A[0]} y1={A[1]} x2={Cv[0]} y2={Cv[1]} color={C.sky} width={7} delay={0.3} />
+        <T x={176} y={178} size={24} color={C.sky} weight={800} anchor="end">b</T>
+        <Line x1={A[0]} y1={A[1]} x2={B[0]} y2={B[1]} color={C.mint} width={7} delay={0.6} />
+        <T x={250} y={320} size={24} color={C.mint} weight={800}>c</T>
+      </Show>
+      <Show when={step === 1}>
+        <T x={540} y={150} size={18}>side a faces</T>
+        <T x={540} y={178} size={18}>angle A</T>
+        <T x={540} y={220} size={15} color={C.soft}>(across the triangle)</T>
+      </Show>
+      <Show when={step === 2}>
+        <T x={530} y={70} size={16} color={C.soft}>A = 48°, B = 61°, C = 71°</T>
+        <T x={530} y={115} size={18}>9.2 ÷ sin 48° ≈ 12.4</T>
+        <T x={530} y={155} size={18} delay={0.4}>10.8 ÷ sin 61° ≈ 12.4</T>
+        <T x={530} y={195} size={18} delay={0.8}>11.7 ÷ sin 71° ≈ 12.4</T>
+        <T x={530} y={235} size={16} color={C.soft} delay={1.2}>always the same number!</T>
+      </Show>
+      <Pill x={500} y={300} text="a/sin A = b/sin B = c/sin C" show={step === 2 || step === 3} color={C.violet} size={15} />
+      <Show when={step === 3}>
+        <path d="M144 290 A 44 44 0 0 0 129 258" fill="none" stroke={C.sun} strokeWidth={5} />
+        <T x={530} y={90} size={20} weight={700}>Matching pair ✓</T>
+        <T x={530} y={130} size={16} color={C.soft}>a side + the angle</T>
+        <T x={530} y={154} size={16} color={C.soft}>directly opposite it</T>
+        <T x={530} y={200} size={16}>…plus one more fact</T>
+        <T x={530} y={224} size={16}>→ sine rule</T>
+      </Show>
+
+      {/* ---- steps 4–5: laptop hinge → cosine rule ---- */}
+      <Show when={step === 4 || step === 5}>
+        <line x1={hinge[0]} y1={hinge[1]} x2={key[0]} y2={key[1]} stroke={C.soft} strokeWidth={12} strokeLinecap="round" />
+        <T x={290} y={298} size={15} color={C.soft}>keyboard</T>
+        {opens.map((o, i) => {
+          const t = tip(o.d)
+          return (
+            <Show key={o.d} when={step === 4 || o.d === 90} delay={step === 4 ? i * 0.9 : 0}>
+              <line x1={hinge[0]} y1={hinge[1]} x2={t[0]} y2={t[1]} stroke={C.ink} strokeWidth={8} strokeLinecap="round" opacity={0.85} />
+              <line x1={t[0]} y1={t[1]} x2={key[0]} y2={key[1]} stroke={o.col} strokeWidth={4} strokeDasharray="9 7" />
+              <circle cx={t[0]} cy={t[1]} r={6} fill={o.col} />
+              <T x={540} y={110 + i * 46} size={18} color={o.col} weight={700} show={step === 4}>{`${o.d}° → gap ${o.gap}`}</T>
+            </Show>
+          )
+        })}
+        <path d="M222 270 A 32 32 0 0 0 190 238" fill="none" stroke={C.sun} strokeWidth={4} />
+        <T x={530} y={70} size={14} color={C.soft} show={step === 4}>screen 150 · keyboard 200</T>
+      </Show>
+      <Show when={step === 5}>
+        <T x={140} y={190} size={20} weight={700}>c</T>
+        <T x={300} y={250} size={20} weight={700}>b</T>
+        <T x={310} y={175} size={20} color={C.sky} weight={700}>a</T>
+        <T x={228} y={246} size={17} color="#c48a00" weight={700}>A</T>
+        <T x={520} y={80} size={17}>at 90°: a² = b² + c²</T>
+        <T x={520} y={110} size={15} color={C.soft}>(Pythagoras!)</T>
+        <T x={520} y={160} size={17}>any angle: subtract</T>
+        <T x={520} y={186} size={17}>a correction 2bc cos A</T>
+      </Show>
+      <Pill x={455} y={330} text="a² = b² + c² − 2bc cos A" show={step === 5} color={C.sky} size={17} />
+
+      {/* ---- step 6: area rule ---- */}
+      <Show when={step === 6}>
+        <Poly points={[P, Q, R]} fill={C.mintSoft} stroke={C.mint} width={4} />
+        <Line x1={R[0]} y1={R[1]} x2={R[0]} y2={P[1]} color={C.coral} width={3} dash="8 6" />
+        <path d={`M${R[0]} ${P[1] - 14} L${R[0] + 14} ${P[1] - 14} L${R[0] + 14} ${P[1]}`} fill="none" stroke={C.ink} strokeWidth={2} />
+        <path d="M160 290 A 40 40 0 0 0 148 262" fill="none" stroke={C.sun} strokeWidth={4} />
+        <T x={170} y={270} size={18} color="#c48a00" weight={700}>C</T>
+        <T x={270} y={316} size={20} weight={700}>a</T>
+        <T x={166} y={190} size={20} weight={700} anchor="end">b</T>
+        <T x={258} y={258} size={17} color={C.coral} weight={700} anchor="start">h = b sin C</T>
+        <T x={530} y={100} size={17}>Area = ½ × base × height</T>
+        <T x={530} y={140} size={17} delay={0.5}>= ½ × a × b sin C</T>
+        <Pill x={530} y={210} text="Area = ½ab sin C" color={C.mint} size={18} delay={1} />
+      </Show>
+
+      {/* ---- step 7: which rule? ---- */}
+      <Show when={step >= 7}>
+        <T x={320} y={50} size={24} weight={800}>Which rule?</T>
+        {[
+          { q: 'Matching pair (side + opposite angle)?', r: 'Sine rule', col: C.violet },
+          { q: 'Two sides + angle between, or 3 sides?', r: 'Cosine rule', col: C.sky },
+          { q: 'Need the area?', r: 'Area rule', col: C.mint },
+        ].map((row, i) => (
+          <Show key={row.r} when={step >= 7} delay={0.3 + i * 0.6}>
+            <rect x={40} y={92 + i * 82} width={340} height={56} rx={16} fill="white" stroke={C.line} strokeWidth={2} />
+            <text x={210} y={121 + i * 82} fontSize={16} fontWeight={600} fill={C.ink} textAnchor="middle" dominantBaseline="middle">
+              {row.q}
+            </text>
+            <Arrow x1={392} y1={120 + i * 82} x2={438} y2={120 + i * 82} color={C.soft} />
+            <rect x={452} y={96 + i * 82} width={150} height={48} rx={24} fill={row.col} />
+            <text x={527} y={121 + i * 82} fontSize={18} fontWeight={700} fill="white" textAnchor="middle" dominantBaseline="middle">
+              {row.r}
+            </text>
+          </Show>
+        ))}
+      </Show>
+    </g>
+  )
+}
+
+export const trigRules: SceneDef = {
+  id: 'trig-rules',
+  title: 'Trigonometry in any triangle',
+  steps: [
+    'SOH CAH TOA needs a right angle. But most triangles don’t have one! Let’s meet three rules that work for every triangle.',
+    'First, labelling. The angles are capital A, B and C. Each side gets the small letter of the angle opposite it — side a faces angle A.',
+    'Big angles face big sides. In fact, divide any side by the sine of its opposite angle and you always get the same number. That’s the sine rule.',
+    'So use the sine rule when you know a matching pair — a side and the angle opposite it — plus one more side or angle.',
+    'Now open a laptop. The screen and keyboard stay the same length, but the wider the hinge opens, the bigger the gap between their tips.',
+    'At exactly 90 degrees, the gap is just Pythagoras. For any other angle, the cosine rule adds a correction: $a^2 = b^2 + c^2 - 2bc\\cos A$. Use it for two sides and the angle between them, or for all three sides.',
+    'The area rule comes from half base times height. The height is $b\\sin C$, so the area is $\\frac{1}{2}ab\\sin C$.',
+    'Which rule? Matching pair: sine rule. Two sides and the angle between, or all three sides: cosine rule. Need the area: area rule.',
+  ],
+  Comp: TrigRules,
+}
+
 // ---------- Surface area ----------
 function SurfaceA({ step }: { step: number }) {
   return (

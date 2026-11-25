@@ -149,6 +149,7 @@ const SKILLS: Record<string, string[]> = {
   pythagoras: ['Hypotenuse', 'Shorter side', 'Problems & tests'],
   trig: ['Naming sides', 'Choosing a ratio', 'Finding a side', 'Finding an angle'],
   'trig-apps': ['Elevation/depression', 'Bearings'],
+  'trig-rules': ['Which rule?', 'Sine → side', 'Sine → angle', 'Cosine → side', 'Cosine → angle', 'Area rule'],
   'surface-area': ['Prisms', 'Cylinders'],
   volume: ['Prisms & capacity', 'Cylinders'],
   similarity: ['Missing sides', 'Area scale', 'Shadows'],

@@ -40,6 +40,8 @@ export function Figure({ fig }: { fig: Fig }) {
     )
   }
 
+  if (fig.type === 'gtri') return <GeneralTriangle fig={fig} />
+
   if (fig.type === 'graph') {
     const u = 20
     const o = 140
@@ -114,6 +116,85 @@ export function Figure({ fig }: { fig: Fig }) {
       <text x={18} y={125} fontSize={13} fill={C.soft} textAnchor="middle" fontWeight={600} transform="rotate(-90 18 125)">
         {fig.yLabel}
       </text>
+    </svg>
+  )
+}
+
+type V = [number, number]
+const sub = (a: V, b: V): V => [a[0] - b[0], a[1] - b[1]]
+const unit = (v: V): V => {
+  const l = Math.hypot(v[0], v[1]) || 1
+  return [v[0] / l, v[1] / l]
+}
+
+/** Any triangle ABC, drawn to shape (side c along the bottom). */
+function GeneralTriangle({ fig }: { fig: Extract<Fig, { type: 'gtri' }> }) {
+  const r = Math.PI / 180
+  const [A, B, Cg] = fig.angles
+  // unit triangle via the sine rule, maths coords (y up)
+  const raw: V[] = [
+    [0, 0],
+    [Math.sin(Cg * r), 0],
+    [Math.sin(B * r) * Math.cos(A * r), Math.sin(B * r) * Math.sin(A * r)],
+  ]
+  const W = 340
+  const pad = 46
+  const xs = raw.map((p) => p[0])
+  const ys = raw.map((p) => p[1])
+  const [x0, x1, y1] = [Math.min(...xs), Math.max(...xs), Math.max(...ys)]
+  // fill the width, but keep tall triangles from getting too tall
+  const s = Math.min((W - 2 * pad) / (x1 - x0), 210 / (y1 || 1))
+  const H = Math.max(170, y1 * s + 2 * pad)
+  const ox = (W - (x1 - x0) * s) / 2 - x0 * s
+  const oy = (H + y1 * s) / 2
+  const P: V[] = raw.map((p) => [ox + p[0] * s, oy - p[1] * s])
+  const G: V = [(P[0][0] + P[1][0] + P[2][0]) / 3, (P[0][1] + P[1][1] + P[2][1]) / 3]
+  const names = ['A', 'B', 'C'] as const
+  const sides = ['a', 'b', 'c'] as const // side opposite each vertex
+  const ang = [A, B, Cg]
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="mx-auto h-auto w-full max-w-sm">
+      <path d={`M${P[0]} L${P[1]} L${P[2]} Z`} fill="#ece8ff" stroke={C.violet} strokeWidth={3} strokeLinejoin="round" />
+      {sides.map((sd, i) => {
+        const [p, q] = [P[(i + 1) % 3], P[(i + 2) % 3]]
+        const m: V = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2]
+        const out = unit(sub(m, G))
+        const hl = fig.highlight === sd
+        return (
+          <g key={sd}>
+            {hl && <path d={`M${p} L${q}`} stroke={C.coral} strokeWidth={6} strokeLinecap="round" />}
+            {fig.labels[sd] && (
+              <text x={m[0] + out[0] * (16 + Math.abs(out[0]) * fig.labels[sd]!.length * 5)} y={m[1] + out[1] * 18} fontSize={18} fontWeight={700} fill={hl ? C.coral : C.ink} textAnchor="middle" dominantBaseline="middle">
+                {fig.labels[sd]}
+              </text>
+            )}
+          </g>
+        )
+      })}
+      {names.map((n, i) => {
+        const v = P[i]
+        const u1 = unit(sub(P[(i + 1) % 3], v))
+        const u2 = unit(sub(P[(i + 2) % 3], v))
+        const bis = unit([u1[0] + u2[0], u1[1] + u2[1]])
+        const rr = 24
+        const sweep = u1[0] * u2[1] - u1[1] * u2[0] > 0 ? 1 : 0
+        const label = fig.labels[n]
+        const hl = fig.highlight === n
+        const dist = 30 + Math.max(0, 50 - ang[i]) * 0.5 + (label && label.length > 3 ? 6 : 0)
+        return (
+          <g key={n}>
+            {label && <path d={`M${v[0] + u1[0] * rr} ${v[1] + u1[1] * rr} A ${rr} ${rr} 0 0 ${sweep} ${v[0] + u2[0] * rr} ${v[1] + u2[1] * rr}`} fill="none" stroke={hl ? C.coral : C.sun} strokeWidth={hl ? 5 : 4} />}
+            {label && (
+              <text x={v[0] + bis[0] * dist} y={v[1] + bis[1] * dist} fontSize={14} fontWeight={700} fill={hl ? C.coral : '#b07d00'} textAnchor="middle" dominantBaseline="middle">
+                {label}
+              </text>
+            )}
+            <text x={v[0] - bis[0] * 16} y={v[1] - bis[1] * 16} fontSize={16} fontWeight={800} fill={C.soft} textAnchor="middle" dominantBaseline="middle">
+              {n}
+            </text>
+          </g>
+        )
+      })}
     </svg>
   )
 }

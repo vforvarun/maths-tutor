@@ -122,6 +122,104 @@ export const bearingG: Gen = () => {
   return num(`Sam walks on a bearing of ${String(b).padStart(3, '0')}°. What bearing must Sam walk to return to the start?`, back, [`The return (back) bearing differs by 180°.`, b < 180 ? `${b}° + 180° = ${back}°` : `${b}° − 180° = ${back}°`], { unit: '°', hint: 'Add 180° if less than 180°, otherwise subtract.' })
 }
 
+// ---------- Trigonometry in any triangle (sine, cosine & area rules) ----------
+const sinD = (d: number) => Math.sin(rad(d))
+const cosD = (d: number) => Math.cos(rad(d))
+/** angle (degrees) opposite side z, from three sides */
+const angleFrom = (x: number, y: number, z: number) => deg(Math.acos((x * x + y * y - z * z) / (2 * x * y)))
+
+export const sineSide: Gen = (d) => {
+  const A = ri(30, 100)
+  const B = ri(25, Math.min(110, 155 - A))
+  const C = 180 - A - B
+  const a = ri(6, 25)
+  const x = (a * sinD(B)) / sinD(A)
+  if (d === 3) {
+    // given A and C: find B first
+    return num(`In triangle $ABC$, $A = ${A}°$, $C = ${C}°$ and $a = ${a}$ cm. Find side $b$ (1 decimal place).`, round(x, 1), [`Side $b$ is opposite angle $B$, so find $B$ first: $B = 180° - ${A}° - ${C}° = ${B}°$`, `Matching pair: $a$ and $A$ → sine rule: $\\dfrac{b}{\\sin ${B}°} = \\dfrac{${a}}{\\sin ${A}°}$`, `$b = \\dfrac{${a} \\sin ${B}°}{\\sin ${A}°} \\approx ${dp1(x)}$ cm`], { tol: 0.06, unit: 'cm', hint: 'Angles in a triangle add to 180°. Which angle is opposite b?', fig: { type: 'gtri', angles: [A, B, C], labels: { A: `${A}°`, C: `${C}°`, a: `${a} cm`, b: 'b' }, highlight: 'b' } })
+  }
+  return num(`Find side $x$ (1 decimal place).`, round(x, 1), [`Side ${a} cm is opposite ${A}°, a **matching pair** → sine rule.`, `$\\dfrac{x}{\\sin ${B}°} = \\dfrac{${a}}{\\sin ${A}°}$`, `$x = \\dfrac{${a} \\sin ${B}°}{\\sin ${A}°} \\approx ${dp1(x)}$ cm`], { tol: 0.06, unit: 'cm', hint: 'Find a side and the angle opposite it — that’s your matching pair.', fig: { type: 'gtri', angles: [A, B, C], labels: { A: `${A}°`, B: `${B}°`, a: `${a} cm`, b: 'x' }, highlight: 'b' } })
+}
+
+export const sineAngle: Gen = (d) => {
+  const A = d === 1 ? ri(50, 90) : ri(35, 120)
+  const a = ri(9, 22)
+  const b = ri(Math.max(4, Math.ceil(a * 0.45)), a - 1) // b < a → B is acute, no ambiguity
+  const s = (b * sinD(A)) / a
+  const B = deg(Math.asin(s))
+  return num(`Find angle $\\theta$ (1 decimal place).`, round(B, 1), [`${a} is opposite ${A}° (matching pair), and ${b} is opposite $\\theta$ → sine rule, flipped to find an angle.`, `$\\dfrac{\\sin\\theta}{${b}} = \\dfrac{\\sin ${A}°}{${a}}$`, `$\\sin\\theta = \\dfrac{${b} \\sin ${A}°}{${a}} \\approx ${tx(s, 4)}$`, `$\\theta = \\sin^{-1}(${tx(s, 4)}) \\approx ${dp1(B)}°$`, `Check: ${b} < ${a}, so $\\theta$ must be smaller than ${A}° — it’s acute, so there’s only one answer.`], { tol: 0.06, unit: '°', hint: 'Put the sines on top when you are finding an angle.', fig: { type: 'gtri', angles: [A, B, 180 - A - B], labels: { A: `${A}°`, B: 'θ', a: String(a), b: String(b) }, highlight: 'B' } })
+}
+
+export const cosineSide: Gen = (d) => {
+  const A = d === 1 ? ri(40, 80) : d === 2 ? ri(30, 120) : ri(95, 140)
+  const b = ri(5, 20)
+  const c = ri(5, 20)
+  const a2 = b * b + c * c - 2 * b * c * cosD(A)
+  const a = Math.sqrt(a2)
+  const B = angleFrom(a, c, b)
+  return num(`Find side $x$ (1 decimal place).`, round(a, 1), [
+    `Two sides and the angle **between** them (no matching pair) → cosine rule.`,
+    `$x^2 = ${b}^2 + ${c}^2 - 2 \\times ${b} \\times ${c} \\times \\cos ${A}°$`,
+    `$x^2 = ${b * b + c * c} - ${2 * b * c} \\cos ${A}° \\approx ${tx(a2, 2)}$${A > 90 ? ` (cos of an obtuse angle is negative, so this ends up *adding*)` : ''}`,
+    `$x = \\sqrt{${tx(a2, 2)}} \\approx ${dp1(a)}$ m`,
+  ], { tol: 0.06, unit: 'm', hint: 'Type it in one go: b² + c² − 2bc·cos A, then square-root.', fig: { type: 'gtri', angles: [A, B, 180 - A - B], labels: { A: `${A}°`, b: `${b} m`, c: `${c} m`, a: 'x' }, highlight: 'a' } })
+}
+
+export const cosineAngle: Gen = (d) => {
+  const a = ri(5, 15)
+  const b = ri(5, 15)
+  // d3: the third side is the longest, so θ may be obtuse
+  const c = d === 3 ? ri(Math.max(a, b) + 1, a + b - 2) : ri(Math.abs(a - b) + 2, a + b - 2)
+  const nm = a * a + b * b - c * c
+  const dn = 2 * a * b
+  const C = deg(Math.acos(nm / dn))
+  const A = angleFrom(b, c, a)
+  return num(`${d === 3 ? 'Find the largest angle, $\\theta$' : 'Find angle $\\theta$'} (1 decimal place).`, round(C, 1), [
+    ...(d === 3 ? [`The largest angle is opposite the longest side (${c}).`] : []),
+    `All three sides, no angles → cosine rule, rearranged for the angle.`,
+    `$\\cos\\theta = \\dfrac{${a}^2 + ${b}^2 - ${c}^2}{2 \\times ${a} \\times ${b}} = \\dfrac{${nm}}{${dn}}$`,
+    `$\\theta = \\cos^{-1}\\left(\\dfrac{${nm}}{${dn}}\\right) \\approx ${dp1(C)}°$${nm < 0 ? ' — the cosine is negative, so the angle is obtuse.' : ''}`,
+  ], { tol: 0.06, unit: '°', hint: 'The side opposite θ is the one you subtract.', fig: { type: 'gtri', angles: [A, 180 - A - C, C], labels: { a: String(a), b: String(b), c: String(c), C: 'θ' }, highlight: 'C' } })
+}
+
+export const areaRule: Gen = (d) => {
+  const a = ri(4, 20)
+  const b = ri(4, 20)
+  const C = d === 1 ? pick([30, 45, 60, 90, 150]) : ri(25, 150)
+  const area = 0.5 * a * b * sinD(C)
+  const c = Math.sqrt(a * a + b * b - 2 * a * b * cosD(C))
+  const A = angleFrom(b, c, a)
+  if (d === 3 && C < 90) {
+    const ar = round(area, 1)
+    const s = (2 * ar) / (a * b)
+    const th = deg(Math.asin(s))
+    return num(`A triangle has sides ${a} cm and ${b} cm with an acute angle $\\theta$ between them. Its area is ${tx(ar, 1)} cm². Find $\\theta$ (1 decimal place).`, round(th, 1), [`Area rule: $${tx(ar, 1)} = \\tfrac12 \\times ${a} \\times ${b} \\times \\sin\\theta$`, `$\\sin\\theta = \\dfrac{2 \\times ${tx(ar, 1)}}{${a} \\times ${b}} \\approx ${tx(s, 4)}$`, `$\\theta = \\sin^{-1}(${tx(s, 4)}) \\approx ${dp1(th)}°$`], { tol: 0.11, unit: '°', hint: 'Substitute into Area = ½ab sin C, then solve for sin θ.', fig: { type: 'gtri', angles: [A, 180 - A - C, C], labels: { a: `${a} cm`, b: `${b} cm`, C: 'θ' }, highlight: 'C' } })
+  }
+  return num(`Find the area of the triangle (1 decimal place).`, round(area, 1), [`Two sides and the angle **between** them → area rule.`, `$\\text{Area} = \\tfrac12 ab\\sin C = \\tfrac12 \\times ${a} \\times ${b} \\times \\sin ${C}°$`, `$\\approx ${dp1(area)}$ cm²`], { tol: 0.06, unit: 'cm²', hint: 'Area = ½ × side × side × sin(angle between them).', fig: { type: 'gtri', angles: [A, 180 - A - C, C], labels: { a: `${a} cm`, b: `${b} cm`, C: `${C}°` } } })
+}
+
+export const whichRule: Gen = () => {
+  const SR = 'Sine rule'
+  const CR = 'Cosine rule'
+  const AR = 'Area rule'
+  const RT = 'SOH CAH TOA'
+  const A = ri(35, 80)
+  const B = ri(35, Math.min(95, 150 - A))
+  const ang: [number, number, number] = [A, B, 180 - A - B]
+  const sB = deg(Math.asin((7 * sinD(A)) / 9))
+  const sss: [number, number, number] = [angleFrom(7, 9, 5), angleFrom(5, 9, 7), angleFrom(5, 7, 9)]
+  const cases = [
+    { q: 'Find side $x$.', r: SR, why: 'We know 8 and the angle opposite it — a matching pair. So use the sine rule.', labels: { A: `${A}°`, B: `${B}°`, a: '8', b: 'x' } },
+    { q: 'Find angle $\\theta$.', r: SR, why: 'We know 9 and its opposite angle — a matching pair — and the side opposite θ. Sine rule.', labels: { A: `${A}°`, a: '9', b: '7', B: 'θ' }, ang: [A, sB, 180 - A - sB] as [number, number, number] },
+    { q: 'Find side $x$.', r: CR, why: 'Two sides and the angle between them, with no matching pair → cosine rule.', labels: { A: `${A}°`, b: '6', c: '9', a: 'x' } },
+    { q: 'Find angle $\\theta$.', r: CR, why: 'All three sides and no angles → cosine rule.', labels: { a: '5', b: '7', c: '9', C: 'θ' }, ang: sss },
+    { q: 'Find the area of the triangle.', r: AR, why: 'Two sides and the angle between them, and we want the area → Area = ½ab sin C.', labels: { a: '6', b: '10', C: `${ang[2]}°` } },
+  ]
+  if (Math.random() < 0.15) return mcq('A triangle has a **right angle**, one known side and one known angle. Which is the quickest tool to find another side?', RT, [SR, CR, AR], ['With a right angle, SOH CAH TOA is the simplest. (The sine and cosine rules still work, but take longer.)'])
+  const c = pick(cases)
+  return mcq(`${c.q} Which rule should you use?`, c.r, [SR, CR, AR, RT], [c.why, 'Matching pair → sine rule · no matching pair → cosine rule · area → area rule.'], 'Look for a side and the angle directly opposite it.', { type: 'gtri', angles: ('ang' in c && c.ang) || ang, labels: { ...c.labels } })
+}
+
 // ---------- Surface area ----------
 export const saPrism: Gen = (d) => {
   const l = ri(2, 12)

@@ -62,6 +62,7 @@ export function diagnose(p: Problem, vals: string[], topic?: string): string | n
   if (a !== 0 && (near(v, a * 2) || near(v, a / 2))) return 'You’re out by a factor of 2. Check halving and doubling — e.g. the ½ in a triangle’s area, or dividing by 2 for a midpoint.'
   if (a !== 0 && (near(v, a * 3) || near(v, a / 3))) return 'You’re out by a factor of 3 — did you forget (or add) a ⅓, as in the volume of a cone or pyramid?'
   if (topic === 'pythagoras' || topic === 'coordinate') return 'Check which side is the hypotenuse (the longest side). To find it, **add** the squares; to find a shorter side, **subtract**.'
+  if (topic === 'trig-rules') return 'Look for a **matching pair** (a side and the angle opposite it): if you have one, use the sine rule; if not, the cosine rule. Check your calculator is in **degrees**, and type the cosine rule in one go before square-rooting.'
   if (topic === 'trig' || topic === 'trig-apps') return 'Label O, A and H from the angle first, then pick SOH, CAH or TOA. Also check your calculator is in **degrees** mode.'
   if (topic === 'simple-interest' || topic === 'compound-interest') return 'Did you write the percentage as a decimal (5% → 0.05)? And does the question want the interest, or the total amount?'
   if (topic === 'equations') return 'Try substituting your answer back into the equation — does it balance? Undo operations in reverse order.'

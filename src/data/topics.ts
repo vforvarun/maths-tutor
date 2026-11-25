@@ -492,6 +492,52 @@ The angle of depression from A to B equals the angle of elevation from B to A (a
     gens: [M.elevationG, M.bearingG],
   }),
   T({
+    id: 'trig-rules', title: 'Trigonometry in any triangle', strand: 'measurement', level: 10, emoji: '🔺', scene: 'trig-rules',
+    summary: 'Sine rule, cosine rule and area rule — no right angle needed.',
+    analogy: { emoji: '💻', title: 'Opening a laptop', text: 'The screen and keyboard never change length, but the wider you open the hinge, the further apart their tips get. The cosine rule tells you that gap for any hinge angle — and at exactly 90° it’s just Pythagoras.' },
+    lesson: `
+SOH CAH TOA only works in **right-angled** triangles. These three rules work in **any** triangle.
+
+**Labelling:** capital letters $A$, $B$, $C$ are the angles. Each side takes the lowercase letter of the angle **opposite** it — side $a$ faces angle $A$.
+
+**Sine rule** — use it when you know a **matching pair** (a side and the angle opposite it) plus one more fact:
+
+$$\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B} = \\dfrac{c}{\\sin C}$$
+
+To find an angle, flip it so the sines are on top: $\\dfrac{\\sin A}{a} = \\dfrac{\\sin B}{b}$.
+
+**Cosine rule** — use it when there’s **no matching pair**: two sides and the angle **between** them (find the third side), or all three sides (find an angle).
+
+$$a^2 = b^2 + c^2 - 2bc\\cos A \\qquad \\cos A = \\dfrac{b^2 + c^2 - a^2}{2bc}$$
+
+> If $A = 90°$ then $\\cos A = 0$, and the cosine rule turns into Pythagoras: $a^2 = b^2 + c^2$.
+
+**Area rule** — two sides and the angle between them:
+
+$$\\text{Area} = \\tfrac12 ab\\sin C$$
+
+**Which rule?**
+
+- Matching pair → **sine rule**
+- No matching pair → **cosine rule**
+- Want the area → **area rule**
+- The biggest angle is always opposite the longest side.
+- An obtuse angle has a **negative** cosine; the cosine rule handles that automatically.
+
+! Type the cosine rule in one go: $b^2 + c^2 - 2bc\\cos A$. Don’t work out $b^2 + c^2 - 2bc$ first and then multiply by $\\cos A$.
+
+! Finding an angle with the sine rule can be **ambiguous**, because $\\sin 30° = \\sin 150°$. If the angle is opposite the **shorter** of the two known sides, it must be acute.`,
+    examples: [
+      { q: 'In triangle $ABC$, $A = 40°$, $B = 75°$ and $a = 10$ cm. Find $b$.', steps: ['$a$ and $A$ are a matching pair → sine rule', '$\\dfrac{b}{\\sin 75°} = \\dfrac{10}{\\sin 40°}$', '$b = \\dfrac{10 \\sin 75°}{\\sin 40°} \\approx 15.0$ cm'] },
+      { q: '$b = 7$ m, $c = 9$ m and the angle between them is $A = 60°$. Find $a$.', steps: ['Two sides and the included angle → cosine rule', '$a^2 = 7^2 + 9^2 - 2 \\times 7 \\times 9 \\times \\cos 60° = 130 - 63 = 67$', '$a = \\sqrt{67} \\approx 8.2$ m'] },
+      { q: 'A triangle has sides 5, 7 and 8 cm. Find its largest angle.', steps: ['The largest angle is opposite the longest side, 8', '$\\cos\\theta = \\dfrac{5^2 + 7^2 - 8^2}{2 \\times 5 \\times 7} = \\dfrac{10}{70}$', '$\\theta = \\cos^{-1}\\left(\\dfrac{1}{7}\\right) \\approx 81.8°$'] },
+      { q: 'Find the area of a triangle with sides 6 cm and 10 cm and an angle of 30° between them.', steps: ['$\\text{Area} = \\tfrac12 \\times 6 \\times 10 \\times \\sin 30°$', '$= 30 \\times 0.5 = 15$ cm²'] },
+    ],
+    mistakes: ['Using the sine rule without a matching side–angle pair', 'Working out $b^2 + c^2 - 2bc$ first, then multiplying by $\\cos A$', 'Forgetting to square-root at the end of the cosine rule', 'Calculator in radians mode', 'Using the area rule with an angle that isn’t between the two sides'],
+    formulas: ['\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B} = \\dfrac{c}{\\sin C}', 'a^2 = b^2 + c^2 - 2bc\\cos A', '\\cos A = \\dfrac{b^2 + c^2 - a^2}{2bc}', '\\text{Area} = \\tfrac12 ab\\sin C'],
+    gens: [M.whichRule, M.sineSide, M.sineAngle, M.cosineSide, M.cosineAngle, M.areaRule],
+  }),
+  T({
     id: 'surface-area', title: 'Surface area', strand: 'measurement', level: 9, emoji: '🎁', scene: 'surface-area',
     summary: 'The total area covering a 3D object.',
     analogy: { emoji: '🎁', title: 'Wrapping paper', text: 'Surface area is how much wrapping paper covers a present exactly, with no overlaps.' },

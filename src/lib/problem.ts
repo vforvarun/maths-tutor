@@ -4,6 +4,8 @@ export type Fig =
   | { type: 'tri'; opp?: string; adj?: string; hyp?: string; angle?: string; highlight?: 'opp' | 'adj' | 'hyp' }
   | { type: 'graph'; lines?: { m: number; c: number; color?: string }[]; points?: { x: number; y: number; label?: string }[]; parabola?: { a: number; h: number; k: number } }
   | { type: 'scatter'; points: [number, number][]; xLabel: string; yLabel: string }
+  /** any triangle ABC drawn to shape from its angles (degrees); labels for sides a, b, c and angles A, B, C */
+  | { type: 'gtri'; angles: [number, number, number]; labels: Partial<Record<'a' | 'b' | 'c' | 'A' | 'B' | 'C', string>>; highlight?: 'a' | 'b' | 'c' | 'A' | 'B' | 'C' }
 
 export interface Problem {
   q: string
